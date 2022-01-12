@@ -3,17 +3,18 @@ import { ethers } from 'ethers';
 import './App.css';
 import twitterLogo from './assets/twitter-logo.svg';
 import SelectCharacter from './Components/SelectCharacter';
+import Arena from './Components/Arena';
 import { CONTRACT_ADDRESS, transformCharacterData } from './constants';
 import MultiMetaverse from './utils/MultiMetaverse.json';
 
 // Constants
-const TWITTER_HANDLE = '_buildspace';
+const TWITTER_HANDLE = 'julianPerassi';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
 const App = () => {
   // State
   const [currentAccount, setCurrentAccount] = useState(null);
-  const [characterNFT, setCharacterNFT] = useState(null);
+  const [weaponNFT, setWeaponNFT] = useState(null);
   
   // Actions
   const checkIfWalletIsConnected = async () => {
@@ -50,22 +51,24 @@ const App = () => {
       return (
         <div className="connect-wallet-container">
           <img
-            src="https://64.media.tumblr.com/tumblr_mbia5vdmRd1r1mkubo1_500.gifv"
-            alt="Monty Python Gif"
+            src="https://c.tenor.com/AMPle3JOKGEAAAAC/show-me.gif"
+            alt="Big Heads Gif"
           />
           <button
             className="cta-button connect-wallet-button"
             onClick={connectWalletAction}
           >
-            Connect Wallet To Get Started
+            Connect Wallet To Get Schwifty
           </button>
         </div>
       );
       /*
       * Scenario #2
       */
-    } else if (currentAccount && !characterNFT) {
-      return <SelectCharacter setCharacterNFT={setCharacterNFT} />;
+    } else if (currentAccount && !weaponNFT) {
+      return <SelectCharacter setWeaponNFT={setWeaponNFT} />;
+    } else if (currentAccount && weaponNFT) {
+      return <Arena weaponNFT={weaponNFT} setWeaponNFT={setWeaponNFT} />;
     }
   };
 
@@ -117,7 +120,7 @@ const App = () => {
      * The function we will call that interacts with out smart contract
      */
     const fetchNFTMetadata = async () => {
-      console.log('Checking for Character NFT on address:', currentAccount);
+      console.log('Checking for Weapon NFT on address:', currentAccount);
   
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -129,10 +132,10 @@ const App = () => {
   
       const txn = await gameContract.checkIfUserHasNFT();
       if (txn.name) {
-        console.log('User has character NFT');
-        setCharacterNFT(transformCharacterData(txn));
+        console.log('User has weapon NFT');
+        setWeaponNFT(transformCharacterData(txn));
       } else {
-        console.log('No character NFT found');
+        console.log('No weapon NFT found');
       }
     };
   
@@ -150,11 +153,8 @@ const App = () => {
     <div className="App">
       <div className="container">
         <div className="header-container">
-          <p className="header gradient-text">⚔️ Metaverse Slayer ⚔️</p>
-          <p className="sub-text">Team up to protect the Metaverse!</p>
-          {/* This is where our button and image code used to be!
-           *	Remember we moved it into the render method.
-           */}
+          <p className="header gradient-text"> Rick and Morty NFT 🌌</p>
+          <p className="sub-text">Team up to protect the Multimetaverse!</p>
           {renderContent()}
         </div>
         <div className="footer-container">
@@ -164,7 +164,7 @@ const App = () => {
             href={TWITTER_LINK}
             target="_blank"
             rel="noreferrer"
-          >{`built with @${TWITTER_HANDLE}`}</a>
+          >{`built by @${TWITTER_HANDLE}`}</a>
         </div>
       </div>
     </div>

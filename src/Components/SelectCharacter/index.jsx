@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import { CONTRACT_ADDRESS, transformCharacterData } from '../../constants';
 import MultiMetaverse from '../../utils/MultiMetaverse.json';
 
-const SelectCharacter = ({ setCharacterNFT }) => {
+const SelectCharacter = ({ setWeaponNFT }) => {
   const [weapons, setWeapons] = useState([]);
   const [gameContract, setGameContract] = useState(null);
 
@@ -16,6 +16,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
         const mintTxn = await gameContract.mintCharacterNFT(weaponID);
         await mintTxn.wait();
         console.log('mintTxn:', mintTxn);
+        alert(`Your NFT is all done -- see it here: https://testnets.opensea.io/assets/${gameContract}/${weaponID.toNumber()}`)
       }
     } catch (error) {
       console.warn('MintCharacterAction Error:', error);
@@ -97,7 +98,7 @@ const SelectCharacter = ({ setCharacterNFT }) => {
       if (gameContract) {
         const weaponNFT = await gameContract.checkIfUserHasNFT();
         console.log('WeaponNFT: ', weaponNFT);
-        setCharacterNFT(transformCharacterData(weaponNFT));
+        setWeaponNFT(transformCharacterData(weaponNFT));
       }
     };
 
