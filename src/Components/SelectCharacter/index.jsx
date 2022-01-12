@@ -5,21 +5,35 @@ import { CONTRACT_ADDRESS, transformCharacterData } from '../../constants';
 import MultiMetaverse from '../../utils/MultiMetaverse.json';
 
 const SelectCharacter = ({ setCharacterNFT }) => {
-  const [characters, setCharacters] = useState([]);
+  const [weapons, setWeapons] = useState([]);
   const [gameContract, setGameContract] = useState(null);
 
-  const renderCharacters = () =>
-    characters.map((character, index) => (
-      <div className="character-item" key={character.name}>
+  // Actions
+  const mintWeaponNFTAction = (weaponID) => async () => {
+    try {
+      if (gameContract) {
+        console.log('Minting weapon in progress...');
+        const mintTxn = await gameContract.mintCharacterNFT(weaponID);
+        await mintTxn.wait();
+        console.log('mintTxn:', mintTxn);
+      }
+    } catch (error) {
+      console.warn('MintCharacterAction Error:', error);
+    }
+  };
+
+  const renderWeapons = () =>
+    weapons.map((weapon, index) => (
+      <div className="character-item" key={weapon.name}>
         <div className="name-container">
-          <p>{character.name}</p>
+          <p>{weapon.name}</p>
         </div>
-        <img src={character.imageURI} alt={character.name} />
+        <img src={weapon.imageURI} alt={weapon.name} />
         <button
           type="button"
           className="character-mint-button"
-          //onClick={mintCharacterNFTAction(index)}
-        >{`Mint ${character.name}`}</button>
+          onClick={mintWeaponNFTAction(index)}
+        >{`Mint ${weapon.name}`}</button>
       </div>
     ));
 
@@ -45,47 +59,75 @@ const SelectCharacter = ({ setCharacterNFT }) => {
   }, []);
 
   useEffect(() => {
-    const getCharacters = async () => {
+    const getWeapons = async () => {
       try {
         console.log('Getting contract weapons to mint');
   
         /*
-         * Call contract to get all mint-able characters
+         * Call contract to get all mint-able weapons
          */
-        const charactersTxn = await gameContract.getAllDefaultWeapons();
-        console.log('charactersTxn:', charactersTxn);
+        const weaponsTxn = await gameContract.getAllDefaultWeapons();
+        console.log('weaponsTxn:', weaponsTxn);
   
         /*
-         * Go through all of our characters and transform the data
+         * Go through all of our weapons and transform the data
          */
-        const characters = charactersTxn.map((characterData) =>
+        const weapons = weaponsTxn.map((characterData) =>
           transformCharacterData(characterData)
         );
   
         /*
-         * Set all mint-able characters in state
+         * Set all mint-able weapons in state
          */
-        setCharacters(characters);
+        setWeapons(weapons);
       } catch (error) {
         console.error('Something went wrong fetching weapons:', error);
       }
     };
+
+    const onWeaponMint = async (sender, tokenId, weaponIndex) => {
+      console.log(
+        `WeaponNFTMinted - sender: ${sender} tokenId: ${tokenId.toNumber()} weaponIndex: ${weaponIndex.toNumber()}`
+      );
   
-    /*
-     * If our gameContract is ready, let's get characters!
-     */
+      /*
+       * Once our weapon NFT is minted we can fetch the metadata from our contract
+       * and set it in state to move onto the Arena
+       */
+      if (gameContract) {
+        const weaponNFT = await gameContract.checkIfUserHasNFT();
+        console.log('WeaponNFT: ', weaponNFT);
+        setCharacterNFT(transformCharacterData(weaponNFT));
+      }
+    };
+
+
     if (gameContract) {
-      getCharacters();
+      getWeapons();
+  
+      /*
+       * Setup NFT Minted Listener
+       */
+      gameContract.on('WeaponNFTMinted', onWeaponMint);
     }
+  
+    return () => {
+      /*
+       * When your component unmounts, let;s make sure to clean up this listener
+       */
+      if (gameContract) {
+        gameContract.off('WeaponNFTMinted', onWeaponMint);
+      }
+    };
   }, [gameContract]);
 
 
   return (
     <div className="select-character-container">
       <h2>Mint Your Weapon. Choose wisely.</h2>
-      {/* Only show this when there are characters in state */}
-      {characters.length > 0 && (
-        <div className="character-grid">{renderCharacters()}</div>
+      {/* Only show this when there are weapons in state */}
+      {weapons.length > 0 && (
+        <div className="character-grid">{renderWeapons()}</div>
       )}
     </div>
   );
