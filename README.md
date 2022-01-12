@@ -1,15 +1,6 @@
-# Basic Sample Hardhat Project
+# RICK AND MORTY NFT GAME
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+In this repo you can find a NFT game where you can mint various weapons (NFT) on the Rinkeby network.
+You can clone it and run it locally by running `npm start` in its directory or you can go to https://nft-game-mu.vercel.app/.
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
-```
+In this project I learned how to mint NFT through scripts, how they are stored in blockchain, how to work with their metadata in a dynamic way (their state is updated in the network) and how to work with conditional components in React.js, among other things.
