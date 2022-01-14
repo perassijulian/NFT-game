@@ -10,14 +10,14 @@ In this project I learned how to mint NFT through scripts, how they are stored i
 ### Landing
 Connect your wallet. Actually working on Rinkeby
 
-[alt](https://github.com/perassijulian/NFT-game/blob/main/screenshots/landing.PNG)
+![landing](https://github.com/perassijulian/NFT-game/blob/main/screenshots/landing.PNG)
 
 ### Minting
 Choose which weapon you are going to use
 
-[alt](https://github.com/perassijulian/NFT-game/blob/main/screenshots/minting.PNG)
+![minting](https://github.com/perassijulian/NFT-game/blob/main/screenshots/minting.PNG)
 
 ### Attacking
 Give it all!! Let's destroy him!
 
-[alt](https://github.com/perassijulian/NFT-game/blob/main/screenshots/attacking.PNG)
+![attacking](https://github.com/perassijulian/NFT-game/blob/main/screenshots/attacking.PNG)
